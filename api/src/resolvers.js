@@ -17,14 +17,24 @@ module.exports = {
       return ctx.models.Pet.create(input);
     }
   },
-  // Pet: {
-  //   img(pet) {
-  //     return pet.type === 'DOG'
-  //       ? 'https://placedog.net/300/300'
-  //       : 'http://placekitten.com/300/300';
-  //   }
-  // },
-  // User: {
-
-  // }
+  Pet: {
+    tutor(pet, __, ctx) {
+      return ctx.models.User.findById(pet.tutor);
+    },
+    img(pet) {
+      return pet.type === 'DOG'
+        ? 'https://placedog.net/300/300'
+        : 'http://placekitten.com/300/300';
+    }
+  },
+  User: {
+    pets(user, __, ctx) {
+      return ctx.models.Pet.findMany({ tutor: user.id });
+    }
+  },
+  Animal: {
+    __resolveType(obj) {
+      if (obj.tutor) return 'Pet';
+    }
+  }
 };
